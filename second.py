@@ -1,5 +1,4 @@
 import requests
-import random
 
 url = "http://docker-service1-1:5000"  # 1번째 서비스의 주소
 
