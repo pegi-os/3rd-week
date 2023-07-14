@@ -35,11 +35,16 @@ jobs:
         run: |
           pytest
       - name: Check commit status
+        id: check_commit
         run: |
-          if [ "$(cat result.txt)" == "Success" ]; then echo "Success!"; else exit 1; fi
+          if grep -q "success" second.py; then echo "::set-output name=status::success"; else echo "::set-output name=status::fail"; fi
       - name: Commit changes
         run: |
-          git config --local user.email "tlarlguswh@gmail.com"
-          git config --local user.name "GitHub Action"
-          git commit -a -m "Commit changes" --allow-empty
-          git push
+          if [ "${{ steps.check_commit.outputs.status }}" == "success" ]; then
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git commit -a -m "Commit changes" --allow-empty
+            git push
+          else
+            echo "Commit skipped: Changes do not meet criteria"
+          fi
