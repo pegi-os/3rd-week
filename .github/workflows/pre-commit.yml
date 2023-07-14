@@ -2,8 +2,6 @@ name: Python package
 
 on:
   push:
-    paths:
-      - second.py
     branches: [main]
 
 jobs:
@@ -15,9 +13,9 @@ jobs:
         python-version: ["3.10", "3.11"]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
@@ -31,20 +29,6 @@ jobs:
           ruff --format=github --select=E9,F63,F7,F82 --target-version=py37 .
           # default set of ruff rules with GitHub Annotations
           ruff --format=github --target-version=py37 .
-      - name: Do PyTest!
+      - name: Test with pytest
         run: |
           pytest
-      - name: Check commit status
-        id: check_commit
-        run: |
-          if grep -q "success" second.py; then echo "::set-output name=status::success"; else echo "::set-output name=status::fail"; fi
-      - name: Commit changes
-        run: |
-          if [ "${{ steps.check_commit.outputs.status }}" == "success" ]; then
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
-            git commit -a -m "Commit changes" --allow-empty
-            git push
-          else
-            echo "Commit skipped: Changes do not meet criteria"
-          fi
