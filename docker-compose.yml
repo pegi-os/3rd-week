@@ -1,0 +1,22 @@
+version: '3'
+services:
+  service1:
+    build:
+      context: .
+      dockerfile: Dockerfile_first_service
+    ports:
+      - 5000:5000
+    networks:
+      - mynetwork
+      
+  service2:
+    build:
+      context: .
+      dockerfile: Dockerfile_second_service
+    networks:
+      - mynetwork
+
+
+networks:
+  mynetwork:
+    driver: bridge
