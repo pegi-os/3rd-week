@@ -39,7 +39,7 @@ jobs:
           if [ "$(cat result.txt)" == "Success" ]; then echo "Success!"; else exit 1; fi
       - name: Commit changes
         run: |
-          git config --local user.email "action@github.com"
+          git config --local user.email "tlarlguswh@gmail.com"
           git config --local user.name "GitHub Action"
           git commit -a -m "Commit changes" --allow-empty
           git push
