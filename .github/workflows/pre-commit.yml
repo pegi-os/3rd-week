@@ -23,7 +23,7 @@ jobs:
 
       - name: Run pre-commit script
         run: |
-          output=$(python your_test_script.py)
+          output=$(second.py)
           if [[ $output == "Success" ]]; then
             echo "Committing changes..."
             git add .
