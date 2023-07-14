@@ -1,38 +1,45 @@
-name: Pre-Commit
+name: Python package
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - second.py
+    branches: [main]
 
 jobs:
-  pre-commit:
+  build:
+
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Python
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
-
+          python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Check for changes in second.py
         run: |
-          if git diff --name-only HEAD~1 | grep -q "second.py"; then
-            python second.py
-            if [[ $? -eq 0 ]]; then
-              echo "Committing changes..."
-              git add second.py
-              git commit -m "Committing changes to second.py"
-            else
-              echo "Test failed. Fix the issues and try again."
-              exit 1
-            fi
-          else
-            echo "No changes in second.py. Skipping commit."
-          fi
+          python -m pip install --upgrade pip
+          pip install ruff pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Lint with ruff
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          ruff --format=github --select=E9,F63,F7,F82 --target-version=py37 .
+          # default set of ruff rules with GitHub Annotations
+          ruff --format=github --target-version=py37 .
+      - name: Do PyTest!
+        run: |
+          pytest
+      - name: Check commit status
+        run: |
+          if [ "$(cat result.txt)" == "Success" ]; then echo "Success!"; else exit 1; fi
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -a -m "Commit changes" --allow-empty
+          git push
