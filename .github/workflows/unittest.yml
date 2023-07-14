@@ -32,6 +32,6 @@ jobs:
       - name: Do PyTest!
         run: |
           pytest
-      - name: Run main.py
+      - name: Run second.py
         run: |
-          python main.py
+          python second.py
