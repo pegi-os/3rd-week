@@ -8,14 +8,14 @@ services:
       - 5000:5000
     networks:
       - mynetwork
-      
+    image: service1
   service2:
     build:
       context: .
       dockerfile: Dockerfile_second_service
     networks:
       - mynetwork
-
+    image: service2
 
 networks:
   mynetwork:
