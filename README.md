@@ -8,5 +8,3 @@
 - pre-commit은 사용자가 fail의 결과값을 출력받는 숫자를 준다면 commit을 실패시키고, Success숫자들만 commit이 먹히게 하고 싶었는데, 구현 할 때 제대로 작동이 안되어 pre-commit 작성을 완료하지 못하였다.
 
 - git action: git action을 사용하여 사용자가 pull을 할 때마다 second.py에 제대로 된 숫자(int) 값을 넣었는지 확인을 하고 싶었는데, second.py에서 포트 5000번에 구축된 내 웹으로 숫자를 전달하는 파이썬 코드가 있어서인지 git action으로 run second.py라는 문구를 넣으면 향상 실패하는 에러를 겪었다. 따라서 어쩔수 없이 git action으로는 stop the build if there are Python syntax errors or undefined names 의 역할을 하는 Lint with ruff 밖에 구축을 못하였다.
-
-- 
